@@ -1,0 +1,20 @@
+# Cargo configuration for AE350 RISC-V target
+
+[build]
+target = "riscv64gc-unknown-none-elf"
+
+[target.riscv64gc-unknown-none-elf]
+# Use rust-lld as the linker
+rustflags = [
+    "-C", "link-arg=-Tmemory.x",
+    "-C", "link-arg=-Tlink.x",
+]
+
+# If using a custom linker script directly:
+# rustflags = [
+#     "-C", "link-arg=-Tae350-ddr.ld",
+# ]
+
+[unstable]
+build-std = ["core", "alloc"]
+build-std-features = ["compiler-builtins-mem"]

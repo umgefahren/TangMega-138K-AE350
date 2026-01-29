@@ -1,0 +1,19 @@
+[package]
+name = "sag_parser"
+version = "0.1.0"
+edition = "2021"
+description = "Parser for Andes SAG (Segment Address Generator) files"
+license = "MIT"
+repository = "https://github.com/user/TangMega-138K-AE350"
+keywords = ["risc-v", "embedded", "linker", "fpga"]
+categories = ["embedded", "development-tools"]
+
+[dependencies]
+thiserror = "1.0"
+
+[dev-dependencies]
+pretty_assertions = "1.4"
+
+[[bin]]
+name = "sag2ld"
+path = "src/main.rs"
