@@ -1,72 +1,72 @@
 # TangMega-138K-AE350
 
-## Настройка работы ПЛИС в составе Gowin FPGA
+## Configuring FPGA Operation in Gowin FPGA
 
-Для начала нужно уточнить, что на плате присутствуют два USB Type-C порта, они служат для разных целей и требуют разных драйверов. Для прошивки FPGA и Risc-V нужен USB-2, который подписан как Debug.  
-Для его работы нужен драйвер FT2232H ([Ссылка на скачивание](https://ftdichip.com/drivers/d2xx-drivers/)).
+First, it's important to note that the board has two USB Type-C ports that serve different purposes and require different drivers. For flashing the FPGA and RISC-V, you need USB-2, which is labeled as Debug.
+It requires the FT2232H driver ([Download link](https://ftdichip.com/drivers/d2xx-drivers/)).
 
-<img src="images/fig1.png" alt="Необходимый для прошивки Type-C порт" width="50%" height="50%">
+<img src="images/fig1.png" alt="Required Type-C port for flashing" width="50%" height="50%">
 
-Также для успешной прошивки нужно включить свитчи на плате следующим образом:
+For successful flashing, you also need to set the switches on the board as follows:
 
-<img src="images/fig2.png" alt="Правильное включение свитчей" width="50%" height="50%">
+<img src="images/fig2.png" alt="Correct switch configuration" width="50%" height="50%">
 
-Также чтобы успешно прошить плату, необходимо включить ее. Питание можно подавать напрямую через USB Type-C порт или через специальный порт для питания.
+To successfully flash the board, you must also power it on. Power can be supplied directly through the USB Type-C port or through the dedicated power port.
 
-Порт для питания можно также увидеть на рисунке выше. При достаточном питании светодиод DC IN загорится.
+The power port can also be seen in the figure above. When adequate power is supplied, the DC IN LED will light up.
 
-Кроме подключения питания необходимо на 2–5 секунд зажать кнопку POWER на плате.
+In addition to connecting power, you need to hold the POWER button on the board for 2–5 seconds.
 
-<img src="images/fig3.png" alt="Кнопка POWER" width="50%" height="50%">
+<img src="images/fig3.png" alt="POWER button" width="50%" height="50%">
 
-После чего при пустой прошивке на ПЛИС загорится светодиод POWER.
+After this, with an empty firmware on the FPGA, the POWER LED will light up.
 
-<img src="images/fig4.png" alt="Светодиоды POWER, READY, DONE" width="50%" height="50%">
+<img src="images/fig4.png" alt="POWER, READY, DONE LEDs" width="50%" height="50%">
 
-Если этот светодиод не горит, то, скорее всего, FPGA не получает питания.
+If this LED is not lit, the FPGA is likely not receiving power.
 
-Для написания прошивки для FPGA необходимо установить GOWIN EDA с полной лицензией, иначе доступ к IP-ядрам будет ограничен, и работа с Risc-V может быть недоступна.
+To write firmware for the FPGA, you need to install GOWIN EDA with a full license, otherwise access to IP cores will be limited, and working with RISC-V may be unavailable.
 
-Со всеми ресурсами непосредственно FPGA и платы можно ознакомиться на [странице производителя](https://wiki.sipeed.com/hardware/en/tang/tang-mega-138k/mega-138k.html).
+All resources for the FPGA and the board can be found on the [manufacturer's page](https://wiki.sipeed.com/hardware/en/tang/tang-mega-138k/mega-138k.html).
 
-Для проверки работы FPGA можно написать небольшой код для мигания диодами на PMOD.
+To verify FPGA operation, you can write a simple LED blinking code for the PMOD.
 
-Если прошивка была успешно синтезирована и загружена на плату, то вы должны увидеть, как загорятся два остальных диода с рисунка выше, а после, если у вас подключен PMOD-LED, вы увидите работу вашей прошивки.
+If the firmware was successfully synthesized and uploaded to the board, you should see the two remaining LEDs from the figure above light up, and then, if you have a PMOD-LED connected, you will see your firmware in action.
 
-Так как основной целью было исследование работы именно Risc-V в составе платы, перейдем к нему.
+Since the main goal was to explore the operation of RISC-V within the board, let's move on to that.
 
-## Настройка работы Risc-V в составе Gowin FPGA
+## Configuring RISC-V Operation in Gowin FPGA
 
-### Получение среды разработки
+### Obtaining the Development Environment
 
-Для написания прошивок для Risc-V в составе платы нужно либо скачать набор инструментов для сборки и компиляции файлов с официального GitHub AndesTech, либо получить лицензию от Gowin для AndeSight RDS.  
-Для получения лицензии на AndeSight нужно заполнить форму [по ссылке](https://www.gowinsemi.com/en/support/enquires/). Можно заполнить по образцу ниже.
+To write firmware for RISC-V on the board, you need to either download the toolchain for building and compiling files from the official AndesTech GitHub, or obtain a license from Gowin for AndeSight RDS.
+To get a license for AndeSight, fill out the form [at this link](https://www.gowinsemi.com/en/support/enquires/). You can fill it out following the example below.
 
-<img src="images/fig5.png" alt="Образец пунктов, которые нужно заполнить" width="50%" height="50%">
+<img src="images/fig5.png" alt="Example of fields to fill out" width="50%" height="50%">
 
-Все поля, кроме пустых, нужно заполнить именно так, иначе вы либо не получите лицензию, либо получите не ту. Лицензия бессрочная, но позволяет работать только с одним микроконтроллером, именно той модели, которая находится на одном кристалле с ПЛИС.  
-Ожидание ответа может доходить как минимум до 3 дней.
+All fields except empty ones must be filled out exactly as shown, otherwise you will either not receive a license or receive the wrong one. The license is perpetual but only allows working with one microcontroller, specifically the model that is on the same chip as the FPGA.
+The response may take at least 3 days.
 
-После получения ключа и файла лицензии вам стоит скачать AndeSight RDS с официального сайта GOWIN ([ссылка на скачивание](https://cdn.gowinsemi.com.cn/RiscV_AE350_SOC_RDS_V1.3_win.zip)).
+After receiving the key and license file, you should download AndeSight RDS from the official GOWIN website ([download link](https://cdn.gowinsemi.com.cn/RiscV_AE350_SOC_RDS_V1.3_win.zip)).
 
-После скачивания программы при первом запуске появится окно с просьбой ввести лицензию, где вы вводите Serial и License File из письма.
+After downloading the program, on first launch a window will appear asking you to enter the license, where you enter the Serial and License File from the email.
 
-### Подготовка среды разработки
+### Preparing the Development Environment
 
-Теперь желательно скачать `demo_ae350` для сборки программ под данный микроконтроллер. Данную сборку можно найти в стороннем GitHub-репозитории ([ссылка](https://github.com/faa00/Tang_MEGA_138K_Pro_Dock)).  
-В данном репозитории есть 3 папки: 2 из них — это проекты для ПЛИС, которые пока можно игнорировать, а папка `software/ae350_test/` — это набор файлов для успешной компиляции тестовых прошивок под AE350 в составе GOWIN FPGA.  
-Они очень полезны, когда вы проверяете, правильно ли передаете файл прошивки на ПЛИС, а также правильно ли вы внутри прошивки для ПЛИС распределили ресурсы платы. Как их распределять, мы обсудим в следующей главе, а пока вернемся к AndeSight.
+Now it's recommended to download `demo_ae350` for building programs for this microcontroller. This build can be found in a third-party GitHub repository ([link](https://github.com/faa00/Tang_MEGA_138K_Pro_Dock)).
+This repository contains 3 folders: 2 of them are projects for the FPGA, which can be ignored for now, and the `software/ae350_test/` folder is a set of files for successfully compiling test firmware for AE350 within GOWIN FPGA.
+They are very useful when verifying whether you're correctly transferring the firmware file to the FPGA, and also whether you've correctly allocated the board's resources within the FPGA firmware. We'll discuss how to allocate them in the next chapter, but for now let's return to AndeSight.
 
-Для начала нужно создать пустой проект в AndeSight, как показано ниже:
+First, you need to create an empty project in AndeSight, as shown below:
 
-<img src="images/fig6.png" alt="Настройки перед созданием проекта" width="50%" height="50%">
-<img src="images/fig7.png" alt="Настройки проекта" width="50%" height="50%">
+<img src="images/fig6.png" alt="Settings before project creation" width="50%" height="50%">
+<img src="images/fig7.png" alt="Project settings" width="50%" height="50%">
 
-Для успешной прошивки нужно добавить из папки `ae350_test` папку `src` в ваш пустой проект. После кликните правой кнопкой мыши по папке проекта и откройте Properties.
+For successful flashing, you need to add the `src` folder from the `ae350_test` folder to your empty project. Then right-click on the project folder and open Properties.
 
-Теперь нужно настроить параметры сборки проекта. Сначала укажите все папки, в которых находятся файлы заголовков и их реализации, чтобы компилятор знал, куда обращаться. В будущем, если вы захотите создавать свои папки и файлы, вам тоже нужно будет указать пути до них.
+Now you need to configure the project build parameters. First, specify all folders containing header files and their implementations so the compiler knows where to look. In the future, if you want to create your own folders and files, you will also need to specify paths to them.
 
-По пути `C/C++ Build -> Settings -> Andes C Compiler -> Directories` добавьте следующие пути:
+In `C/C++ Build -> Settings -> Andes C Compiler -> Directories` add the following paths:
 
 - `${workspace_loc:/${ProjName}/src/bsp/ae350}`
 - `${workspace_loc:/${ProjName}/src/bsp/config}`
@@ -75,113 +75,113 @@
 - `${workspace_loc:/${ProjName}/src/bsp/lib}`
 - `${workspace_loc:/${ProjName}/src/demo}`
 
-<img src="images/fig8.png" alt="Добавление путей" width="50%" height="50%">
+<img src="images/fig8.png" alt="Adding paths" width="50%" height="50%">
 
-Проще всего это сделать через кнопку `File System`, так как там можно выбрать все пути сразу, а AndeSight сам их подставит.
+The easiest way to do this is through the `File System` button, as you can select all paths at once, and AndeSight will substitute them automatically.
 
-<img src="images/fig9.png" alt="Кнопка File System" width="50%" height="50%">
+<img src="images/fig9.png" alt="File System button" width="50%" height="50%">
 
-Теперь настройте оптимизацию по пути `C/C++ Build -> Settings -> Andes C Compiler -> Optimization`. Установите следующие параметры:
+Now configure optimization in `C/C++ Build -> Settings -> Andes C Compiler -> Optimization`. Set the following parameters:
 
 - Optimization Level: `-Og` (Optimize for speed with better debug ability than O1)
 - Code Model: medium
 - Remove unused function sections (`-ffunction-sections`): Enable
 - Remove unused data sections (`-fdata-sections`): Enable
 
-<img src="images/fig10.png" alt="Оптимизация билда" width="50%" height="50%">
+<img src="images/fig10.png" alt="Build optimization" width="50%" height="50%">
 
-Это поможет экономить ресурсы и улучшить отладку, хотя с настройками можно экспериментировать, так как они почти не влияют на прошивку.
+This helps conserve resources and improve debugging, although you can experiment with the settings as they barely affect the firmware.
 
-Также можно выставить уровень отладки по пути `C/C++ Build -> Settings -> Andes C Compiler -> Debugging`.
+You can also set the debug level in `C/C++ Build -> Settings -> Andes C Compiler -> Debugging`.
 
-<img src="images/fig11.png" alt="Уровень дебагинга" width="50%" height="50%">
+<img src="images/fig11.png" alt="Debugging level" width="50%" height="50%">
 
-Я выставил максимальный, вы можете выбрать любой.
+I set it to maximum; you can choose any level.
 
-В `C/C++ Build -> Settings -> Andes C Compiler -> Miscellaneous` в пункт `Other flags` добавьте: `-c -fmessage-length=0 -fno-builtin -fomit-frame-pointer -fno-strict-aliasing`, а компилятор выберите `gcc`.
+In `C/C++ Build -> Settings -> Andes C Compiler -> Miscellaneous` in the `Other flags` field, add: `-c -fmessage-length=0 -fno-builtin -fomit-frame-pointer -fno-strict-aliasing`, and select `gcc` as the compiler.
 
-<img src="images/fig12.png" alt="Настройки разного" width="50%" height="50%">
+<img src="images/fig12.png" alt="Miscellaneous settings" width="50%" height="50%">
 
-Кроме настройки компилятора, нужно настроить линковщик. По пути `C/C++ Build -> Settings -> LdSaG Tool -> General` в качестве `Linker script template` укажите: `$(ANDESIGHT_ROOT)/utils/nds32_template_v5.txt`.  
-В `SaG file` укажите: `${ProjDirPath}/src/bsp/sag/ae350-ddr.sag`.
+Besides configuring the compiler, you need to configure the linker. In `C/C++ Build -> Settings -> LdSaG Tool -> General`, set `Linker script template` to: `$(ANDESIGHT_ROOT)/utils/nds32_template_v5.txt`.
+In `SaG file`, specify: `${ProjDirPath}/src/bsp/sag/ae350-ddr.sag`.
 
-<img src="images/fig13.png" alt="Настройка LdSaG" width="50%" height="50%">
+<img src="images/fig13.png" alt="LdSaG configuration" width="50%" height="50%">
 
-Затем по пути `C/C++ Build -> Settings -> Andes C Linker -> General` в пункт `Linker Script (-T)` введите: `$(LDSAG_OUT)`. Пункт `Do not use standard start files (-nostartfiles)` должен быть включен.
+Then in `C/C++ Build -> Settings -> Andes C Linker -> General`, in `Linker Script (-T)` enter: `$(LDSAG_OUT)`. The `Do not use standard start files (-nostartfiles)` option should be enabled.
 
-<img src="images/fig14.png" alt="Настройка линковщика" width="50%" height="50%">
+<img src="images/fig14.png" alt="Linker configuration" width="50%" height="50%">
 
-Теперь вы можете билдить проект, нажав левой кнопкой мыши по папке проекта и выбрав молоток на панели сверху.
+Now you can build the project by left-clicking on the project folder and selecting the hammer on the top panel.
 
-<img src="images/fig15.png" alt="Билдинг проекта" width="50%" height="50%">
+<img src="images/fig15.png" alt="Building the project" width="50%" height="50%">
 
-В демо-проекте из репозитория по умолчанию будет программа `led waterfall` и проверка памяти, где выделяется память для массивов `a` и `b`, массив `a` заполняется значениями, они копируются в `b`, выводятся через UART, а затем память очищается и освобождается.
+The demo project from the repository will have the `led waterfall` program and a memory test by default, where memory is allocated for arrays `a` and `b`, array `a` is filled with values, they are copied to `b`, output via UART, and then the memory is cleared and freed.
 
-Кроме этих простых примеров, есть и другие, которые можно включать или выключать, меняя значения в `demo.h`. На основе этих примеров вы можете писать свои прошивки. К сожалению, документации по этим инструментам я не нашел.
+Besides these simple examples, there are others that can be enabled or disabled by changing values in `demo.h`. Based on these examples, you can write your own firmware. Unfortunately, I haven't found documentation for these tools.
 
-Все тестовые прошивки вызываются из `main.c`.
+All test firmware is called from `main.c`.
 
-После билда появится папка `debug`, в которой лежит бинарный файл вашей прошивки. Его нужно залить на микроконтроллер, но это не так просто, так как для прошивки AE350 сначала нужно прошить ПЛИС.
+After building, a `debug` folder will appear containing the binary file of your firmware. It needs to be uploaded to the microcontroller, but this isn't straightforward since to flash AE350, you first need to flash the FPGA.
 
-## Подготовка ПЛИС для работы с Risc-V
+## Preparing the FPGA for RISC-V Operation
 
-### Подготовка среды
+### Preparing the Environment
 
-Из упомянутого ранее репозитория можно скачать одну из двух прошивок для ПЛИС. Я использовал `ae350_demo`, хотя они мало отличаются.
+From the previously mentioned repository, you can download one of two firmware versions for the FPGA. I used `ae350_demo`, although they differ little.
 
-Скачивать их необязательно, так как вы можете настроить все самостоятельно, следуя инструкциям ниже. Однако я рекомендую взять готовый проект из репозитория ([ссылка для Tang 138K](https://github.com/sipeed/TangMega-138K-example)) или ([ссылка для Tang 138K Pro](https://github.com/sipeed/TangMega-138KPro-example/tree/main)).
+Downloading them is optional, as you can configure everything yourself following the instructions below. However, I recommend taking the ready project from the repository ([link for Tang 138K](https://github.com/sipeed/TangMega-138K-example)) or ([link for Tang 138K Pro](https://github.com/sipeed/TangMega-138KPro-example/tree/main)).
 
-Если вы создаете проект с нуля, используйте следующие настройки:
+If you're creating a project from scratch, use the following settings:
 
 - Series: GW5AST
 - Device: GW5AST-138
 - Device Version: B
-- Package: FCPBG484A
+- Package: FCPBGA484A
 - Speed: C1/I0
 - Part Number: GW5AST-LV138FPG676AC1/I0
 
-Для начала подготовьте среду, подключив все IP Core. Начнем с настройки среды.
+First, prepare the environment by connecting all IP Cores. Let's start with environment setup.
 
-Перейдите в `Project -> Configuration -> Global -> General` и включите DRSM, чтобы использовать DDR3 на плате.
+Go to `Project -> Configuration -> Global -> General` and enable DRSM to use DDR3 on the board.
 
-<img src="images/fig16.png" alt="Включение DRSM" width="50%" height="50%">
+<img src="images/fig16.png" alt="Enabling DRSM" width="50%" height="50%">
 
-Далее в `Place & Route` настройте пункты `Place` и `Route`, как показано ниже:
+Next, in `Place & Route`, configure the `Place` and `Route` options as shown below:
 
-<img src="images/fig17.png" alt="Настройка Place" width="50%" height="50%">
-<img src="images/fig18.png" alt="Настройка Route" width="50%" height="50%">
+<img src="images/fig17.png" alt="Place configuration" width="50%" height="50%">
+<img src="images/fig18.png" alt="Route configuration" width="50%" height="50%">
 
-Также переопределите некоторые пины в `Dual-Purpose Pin`. Если вы не переопределяете JTAG, настройте как на рисунке:
+Also redefine some pins in `Dual-Purpose Pin`. If you're not redefining JTAG, configure as shown:
 
-<img src="images/fig19.png" alt="Определение пинов" width="50%" height="50%">
+<img src="images/fig19.png" alt="Pin definition" width="50%" height="50%">
 
-### Подключение IP Core
+### Connecting IP Cores
 
-Добавьте необходимые IP Core. Первый — `RiscV AE350 SOC`, находится по пути `Soft IP Core -> Microprocessor System -> Hard-Core-MCU`.
+Add the necessary IP Cores. The first one is `RiscV AE350 SOC`, located at `Soft IP Core -> Microprocessor System -> Hard-Core-MCU`.
 
-При добавлении выберите, что подключить к AE350. Для проверки работоспособности достаточно добавить GPIO и UART2, как показано:
+When adding, select what to connect to AE350. To verify functionality, it's sufficient to add GPIO and UART2, as shown:
 
-<img src="images/fig20.png" alt="Подключение UART" width="50%" height="50%">
-<img src="images/fig21.png" alt="Подключение GPIO" width="50%" height="50%">
+<img src="images/fig20.png" alt="Connecting UART" width="50%" height="50%">
+<img src="images/fig21.png" alt="Connecting GPIO" width="50%" height="50%">
 
-Также добавьте PLL для преобразования частот. По пути `Hard Module -> CLOCK -> PLL_ADV` добавьте два PLL:
+Also add PLL for frequency conversion. At `Hard Module -> CLOCK -> PLL_ADV` add two PLLs:
 
-1. Для:
+1. For:
    - Clkout0: DDR clock - 50 MHz
    - Clkout1: CORE clock - 800 MHz
    - Clkout2: AHB clock - 100 MHz
    - Clkout3: APB clock - 100 MHz
    - Clkout4: RTC clock - 10 MHz
 
-2. Для DDR3:
+2. For DDR3:
    - Clkout0: DDR3 input clock - 50 MHz
    - Clkout2: DDR3 memory clock - 200 MHz
 
-Начальную страницу PLL настройте, как показано:
+Configure the PLL initial page as shown:
 
-<img src="images/fig22.png" alt="Настройка PLL" width="50%" height="50%">
+<img src="images/fig22.png" alt="PLL configuration" width="50%" height="50%">
 
-Также рекомендую добавить следующий модуль для визуализации работы кода:
+I also recommend adding the following module for visualizing code operation:
 
 ```verilog
 // Debounce by key
@@ -257,71 +257,71 @@ endmodule
 
 ### Top Module
 
-Создайте top module, в котором вызовите все созданные модули и добавьте дополнения для визуализации работы. Пример кода лежит в папке с проектом для Gowin.
+Create a top module where you call all created modules and add additions for visualizing operation. Example code is in the Gowin project folder.
 
-Теперь можно синтезировать прошивку.
+Now you can synthesize the firmware.
 
-Если внимательно посмотреть на код, может показаться, что мы создаем программную копию AE350, но на самом деле GOWIN просто подключает ресурсы платы к реальному AE350. Это видно по потраченным ресурсам.  
-В `Utilization Summary` видно, что LUT и других ресурсов использовано мало, а AE350 выделен отдельным пунктом, то есть мы просто включаем микроконтроллер через прошивку ПЛИС, так как AE350 — часть ее ресурса.
+If you look carefully at the code, it might seem like we're creating a software copy of AE350, but in reality GOWIN simply connects the board's resources to the real AE350. This is evident from the resources used.
+In `Utilization Summary`, you can see that few LUTs and other resources are used, and AE350 is listed as a separate item, meaning we simply enable the microcontroller through the FPGA firmware since AE350 is part of its resources.
 
-<img src="images/fig23.png" alt="Ресурсы, потраченные на прошивку" width="50%" height="50%">
+<img src="images/fig23.png" alt="Resources used for firmware" width="50%" height="50%">
 
-Подключая ресурсы к микроконтроллеру, вы также можете использовать их через ПЛИС, но делайте это осторожно.
+When connecting resources to the microcontroller, you can also use them through the FPGA, but do this carefully.
 
-### Настройка файлов physical и timing constraint для Place&Route
+### Configuring Physical and Timing Constraint Files for Place&Route
 
-Для итогового файла прошивки нужно добавить файлы `physical` и `timing constraint`. Рекомендую взять их из `demo_ae350`, так как они уже настроены под плату. Но важно помнить, что пины в `physical constraint` указаны для Tang 138K Pro.  
-Поэтому их нужно подправить, используя схемы платы с официального сайта (ссылки выше).
+For the final firmware file, you need to add `physical` and `timing constraint` files. I recommend taking them from `demo_ae350`, as they are already configured for the board. But it's important to remember that the pins in `physical constraint` are specified for Tang 138K Pro.
+Therefore, they need to be adjusted using the board schematics from the official website (links above).
 
-Пример `physical constraint` лежит в в папке с проектом для Gowin.
+An example `physical constraint` is in the Gowin project folder.
 
-Теперь все готово для прошивки как ПЛИС, так и AE350.
+Now everything is ready for flashing both the FPGA and AE350.
 
-### Настройки программатора и заливка прошивки
+### Programmer Settings and Firmware Upload
 
-Вам нужен программатор версии не ниже 1.9.9 и ни в коем случае 1.10, иначе ничего не получится.
+You need programmer version 1.9.9 or higher, but definitely not 1.10, otherwise nothing will work.
 
-Сначала прошейте flash прошивкой ПЛИС, затем прошивкой AE350, которая находится в папке `debug` проекта AE350. Делайте, как показано:
+First, flash the FPGA firmware to flash, then the AE350 firmware, which is in the `debug` folder of the AE350 project. Do as shown:
 
-<img src="images/fig24.png" alt="Прошивка AE350" width="50%" height="50%">
-<img src="images/fig25.png" alt="Прошивка ПЛИС" width="50%" height="50%">
+<img src="images/fig24.png" alt="Flashing AE350" width="50%" height="50%">
+<img src="images/fig25.png" alt="Flashing FPGA" width="50%" height="50%">
 
-Эти стартовые адреса взяты с официального сайта GOWIN и должны подходить для любых прошивок.
+These starting addresses are from the official GOWIN website and should work for any firmware.
 
-Для перезаливки прошивки AE350 повторите действия с рисунка выше.
+To re-upload AE350 firmware, repeat the actions from the figure above.
 
-Для прошивки только ПЛИС повторите действия с рисунка выше.
+To flash only the FPGA, repeat the actions from the figure above.
 
-Чтобы стереть flash, сделайте, как показано:
+To erase flash, do as shown:
 
-<img src="images/fig26.png" alt="Очистка flash" width="50%" height="50%">
+<img src="images/fig26.png" alt="Clearing flash" width="50%" height="50%">
 
-Эти прошивки не мешают заливать временные прошивки для ПЛИС в SRAM.
+These firmware versions don't interfere with uploading temporary firmware to SRAM for the FPGA.
 
-Если прошивка успешно залита, загорится диод, выделенный для инициализации DDR3, а затем запустится прошивка AE350.
+If the firmware is successfully uploaded, the LED designated for DDR3 initialization will light up, and then the AE350 firmware will start.
 
-## Возможные проблемы
+## Possible Problems
 
-### Не отображается плата в программаторе
+### Board Not Appearing in Programmer
 
-Скорее всего, вы не установили драйвер FTDI или используете не тот порт Type-C. Переустановите драйвер.
+Most likely, you haven't installed the FTDI driver or you're using the wrong Type-C port. Reinstall the driver.
 
-### Не запускается прошивка
+### Firmware Not Starting
 
-Если после записи на flash AE350 и DDR3 не запускаются, нажмите несколько раз кнопку `Reconfig` на плате.
+If AE350 and DDR3 don't start after writing to flash, press the `Reconfig` button on the board several times.
 
-### После отключения питания и включения обратно не запускается прошивка
+### Firmware Not Starting After Power Cycling
 
-Если нажатия на `Reconfig` не помогают, прошейте SRAM любой другой прошивкой, затем нажмите `Reconfig`.
+If pressing `Reconfig` doesn't help, flash SRAM with any other firmware, then press `Reconfig`.
 
-### Случайно/специально переопределил JTAG у ПЛИС, и теперь программатор выдает "Device not found"
+### Accidentally/Intentionally Redefined JTAG on the FPGA, and Now Programmer Shows "Device not found"
 
-Сотрите прошивку из flash, следуя инструкции:
+Erase the firmware from flash following these instructions:
 
-1. Зажмите кнопку `Reconfig`.
-2. Запустите очистку flash в программаторе.
-3. Дождитесь в логах строки с `Target Device`, затем отпустите `Reconfig`.
-4. Дождитесь окончания очистки.
+1. Hold down the `Reconfig` button.
+2. Start flash clearing in the programmer.
+3. Wait for the `Target Device` line in the logs, then release `Reconfig`.
+4. Wait for the clearing to complete.
 
-После этого JTAG снова станет доступен.  
-Можно не стирать flash, а просто перезаписать прошивку ПЛИС без переопределения JTAG.
+After this, JTAG will be available again.
+You can skip erasing flash and simply overwrite the FPGA firmware without redefining JTAG.
